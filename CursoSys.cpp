@@ -30,7 +30,6 @@ class Plan{
     public:
         Plan(){}
         virtual float getPromedio() = 0;
-        //virtual void getPromedio_() = 0;
         virtual void setNombre(string nombre){
             this->nombre = nombre;
         }
@@ -58,9 +57,6 @@ class Invitado : public Plan{
         }
         float getPromedio(){
             return nota;
-        }
-        void getPromedio_(){
-            cout << "El promedio es: " << nota << endl;
         }
         void setNota(float nota){
             this->nota = nota;
@@ -262,5 +258,4 @@ class Curso{
             }
             archivo.close();
         }
-        
 };
