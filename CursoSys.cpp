@@ -259,3 +259,8 @@ class Curso{
             archivo.close();
         }
 };
+
+int main(){
+    cout << "Bienvenido a CursoSys" << endl;
+    return 0;
+}
