@@ -134,8 +134,8 @@ class Gestor {
         }
         
         vector<VideoJuego*> obtenerJuegosConMasParches()  {
-            vector<VideoJuego*> resultado;
-            if (juegos.empty()) return resultado;
+            vector<VideoJuego*> aux;
+            if (juegos.empty()) return aux;
             
             size_t maxParches = 0;
             for (auto juego : juegos) {
@@ -147,16 +147,16 @@ class Gestor {
             
             for (auto juego : juegos) {
                 if (juego->getParches().size() == maxParches) {
-                    resultado.push_back(juego);
+                    aux.push_back(juego);
                 }
             }
             
-            return resultado;
+            return aux;
         }
         
         vector<VideoJuego*> obtenerJuegosMasCaros()  {
-            vector<VideoJuego*> resultado;
-            if (juegos.empty()) return resultado;
+            vector<VideoJuego*> aux;
+            if (juegos.empty()) return aux;
             
             float maxCosto = 0;
             for (auto juego : juegos) {
@@ -167,11 +167,11 @@ class Gestor {
             
             for (auto juego : juegos) {
                 if (juego->getCosto() == maxCosto) {
-                    resultado.push_back(juego);
+                    aux.push_back(juego);
                 }
             }
             
-            return resultado;
+            return aux;
         }
         
         void guardarEnArchivoTexto()  {
