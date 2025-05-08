@@ -1,6 +1,9 @@
 Dependencias de Paquete1:
 	Paquete2 (v2)
 		Paquete4 (v4)
-			(Sin dependencias)
+			Paquete5 (v5)
+				(Sin dependencias)
 	Paquete3 (v3)
-		(Sin dependencias)
+		Paquete4 (v4)
+			Paquete5 (v5)
+				(Sin dependencias)

@@ -3,6 +3,8 @@
 #include <string>
 #include <fstream>
 #include <cstring>
+#include <algorithm>
+#include <map>
 
 using namespace std;
 
@@ -133,7 +135,7 @@ class ConjuntoPaquetes {
 
         void agregarPaquete(Paquete* paquete) { paquetes.push_back(paquete); }
 
-        void instalacionRec(const Paquete* paquete, vector<Paquete*>& instalados) {
+        void instalar(const Paquete* paquete, vector<Paquete*>& instalados) {
             if (paquete->getDependencias().empty()) return;
             for (auto dep : paquete->getDependencias()) {
                 bool encontrado = false;
@@ -145,8 +147,20 @@ class ConjuntoPaquetes {
                 }
                 if (!encontrado) {
                     instalados.push_back(dep);
-                    instalacionRec(dep, instalados);
+                    instalar(dep, instalados);
                 }
+            }
+        }
+        void instalarTodo() {
+            vector<Paquete*> instalados;
+            for (auto paquete : paquetes) {
+                instalados.push_back(paquete); // Instalamos el paquete en sí
+                instalar(paquete, instalados); // Instalamos sus dependencias
+            }
+        
+            cout << "Paquetes instalados en el conjunto:\n";
+            for (const auto& p : instalados) {
+                cout << "- " << p->getNombre() << " (v" << p->getVersion() << ")\n";
             }
         }
 
@@ -163,7 +177,9 @@ class ConjuntoPaquetes {
                 cout << "No se pudo abrir el archivo.\n";
             }
         }
-}
+
+        
+};
 
 
 int main() {
@@ -195,7 +211,7 @@ int main() {
     conjunto.agregarPaquete(p3);  // ya está como dependencia de p1, pero lo agregamos explícitamente
 
     // Instalar el conjunto
-    conjunto.instalar();
+    conjunto.instalarTodo();
 
     return 0;
 }
