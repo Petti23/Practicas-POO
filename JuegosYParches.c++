@@ -17,6 +17,7 @@ protected:
     char descripcion[200];
     float costo;
 
+    
 public:
     Producto(const char* nombre, const char* descripcion, float costo) {
         strcpy(this->nombre, nombre);
