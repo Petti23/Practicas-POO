@@ -97,6 +97,25 @@ public:
         }
         cout << "Paquete no encontrado.\n";
     }
+
+    void get5ConMayoresDependencias() {
+        sort(paquetes.begin(), paquetes.end(), [](Paquete* a, Paquete* b) {
+            return a->getDependencias().size() > b->getDependencias().size();
+        });
+        cout << "Los 5 paquetes con más dependencias son:\n";
+        for (int i = 0; i < 5 ; i++) {
+            cout << paquetes[i]->getNombre() << " - Dependencias: " << paquetes[i]->getDependencias().size() << endl;
+        }
+    }
+
+    void getPaquetesSinDependencias() {
+        cout << "Paquetes sin dependencias:\n";
+        for (auto paquete : paquetes) {
+            if (paquete->getDependencias().empty()) {
+                cout << paquete->getNombre() << endl;
+            }
+        }
+    }
 };
 
 int main() {
