@@ -7,23 +7,23 @@
 using namespace std;
 
 class Paquete {
-private:
-    char codigo[100];
-    char nombre[100];
-    int version;
-    vector<Paquete*> dependencias;
-public:
-    Paquete(const char* codigo, const char* nombre, int version) {
-        strcpy(this->codigo, codigo);
-        strcpy(this->nombre, nombre);
-        this->version = version;
-    }
+    private:
+        char codigo[100];
+        char nombre[100];
+        int version;
+        vector<Paquete*> dependencias;
+    public:
+        Paquete(const char* codigo, const char* nombre, int version) {
+            strcpy(this->codigo, codigo);
+            strcpy(this->nombre, nombre);
+            this->version = version;
+        }
 
-    const char* getCodigo() const { return codigo; }
-    const char* getNombre() const { return nombre; }
-    int getVersion() const { return version; }
-    void agregarDependencia(Paquete* dependencia) { dependencias.push_back(dependencia); }
-    vector<Paquete*> getDependencias() const { return dependencias; }
+        const char* getCodigo() const { return codigo; }
+        const char* getNombre() const { return nombre; }
+        int getVersion() const { return version; }
+        void agregarDependencia(Paquete* dependencia) { dependencias.push_back(dependencia); }
+        vector<Paquete*> getDependencias() const { return dependencias; }
 };
 
 
@@ -47,76 +47,124 @@ ostream& operator<<(ostream& os, const Paquete& paquete) {
 }
 
 class GestorPaquetes {
-private:
-    vector<Paquete*> paquetes;
-public:
-    ~GestorPaquetes() {
-        for (auto paquete : paquetes) delete paquete;
-    }
-
-    void agregarPaquete(Paquete* paquete) { paquetes.push_back(paquete); }
-
-    void mostrarDependenciasRec(const Paquete* paquete, int nivel) {
-        if (paquete->getDependencias().empty()) {
-            for (int i = 0; i < nivel; i++) cout << "\t";
-            cout << "(Sin dependencias)\n";
-            return;
+    private:
+        vector<Paquete*> paquetes;
+    public:
+        ~GestorPaquetes() {
+            for (auto paquete : paquetes) delete paquete;
         }
-        for (auto dep : paquete->getDependencias()) {
-            for (int i = 0; i < nivel; i++) cout << "\t";
-            cout << dep->getNombre() << " (v" << dep->getVersion() << ")\n";
-            mostrarDependenciasRec(dep, nivel + 1);
-        }
-    }
 
-    void mostrarDependencias(const char* codigo) {
-        for (auto paquete : paquetes) {
-            if (strcmp(paquete->getCodigo(), codigo) == 0) {
-                cout << "Dependencias de " << paquete->getNombre() << ":\n";
-                mostrarDependenciasRec(paquete, 1);
-                return;
-            }
-        }
-        cout << "Paquete no encontrado.\n";
-    }
+        void agregarPaquete(Paquete* paquete) { paquetes.push_back(paquete); }
 
-    void guardarDependenciasEnArchivo(const char* codigo) {
-        for (auto paquete : paquetes) {
-            if (strcmp(paquete->getCodigo(), codigo) == 0) {
-                string nombreArchivo = string(paquete->getNombre()) + ".txt";
-                ofstream archivo(nombreArchivo);
-                if (archivo.is_open()) {
-                    archivo << *paquete;
-                    archivo.close();
-                    cout << "Archivo '" << nombreArchivo << "' generado correctamente.\n";
-                } else {
-                    cout << "No se pudo abrir el archivo.\n";
-                }
-                return;
-            }
-        }
-        cout << "Paquete no encontrado.\n";
-    }
-
-    void get5ConMayoresDependencias() {
-        sort(paquetes.begin(), paquetes.end(), [](Paquete* a, Paquete* b) {
-            return a->getDependencias().size() > b->getDependencias().size();
-        });
-        cout << "Los 5 paquetes con más dependencias son:\n";
-        for (int i = 0; i < 5 ; i++) {
-            cout << paquetes[i]->getNombre() << " - Dependencias: " << paquetes[i]->getDependencias().size() << endl;
-        }
-    }
-
-    void getPaquetesSinDependencias() {
-        cout << "Paquetes sin dependencias:\n";
-        for (auto paquete : paquetes) {
+        void mostrarDependenciasRec(const Paquete* paquete, int nivel) {
             if (paquete->getDependencias().empty()) {
-                cout << paquete->getNombre() << endl;
+                for (int i = 0; i < nivel; i++) cout << "\t";
+                cout << "(Sin dependencias)\n";
+                return;
+            }
+            for (auto dep : paquete->getDependencias()) {
+                for (int i = 0; i < nivel; i++) cout << "\t";
+                cout << dep->getNombre() << " (v" << dep->getVersion() << ")\n";
+                mostrarDependenciasRec(dep, nivel + 1);
             }
         }
-    }
+
+        void mostrarDependencias(const char* codigo) {
+            for (auto paquete : paquetes) {
+                if (strcmp(paquete->getCodigo(), codigo) == 0) {
+                    cout << "Dependencias de " << paquete->getNombre() << ":\n";
+                    mostrarDependenciasRec(paquete, 1);
+                    return;
+                }
+            }
+            cout << "Paquete no encontrado.\n";
+        }
+
+        void guardarDependenciasEnArchivo(const char* codigo) {
+            for (auto paquete : paquetes) {
+                if (strcmp(paquete->getCodigo(), codigo) == 0) {
+                    string nombreArchivo = string(paquete->getNombre()) + ".txt";
+                    ofstream archivo(nombreArchivo);
+                    if (archivo.is_open()) {
+                        archivo << *paquete;
+                        archivo.close();
+                        cout << "Archivo '" << nombreArchivo << "' generado correctamente.\n";
+                    } else {
+                        cout << "No se pudo abrir el archivo.\n";
+                    }
+                    return;
+                }
+            }
+            cout << "Paquete no encontrado.\n";
+        }
+
+        void get5ConMayoresDependencias() {
+            sort(paquetes.begin(), paquetes.end(), [](Paquete* a, Paquete* b) {
+                return a->getDependencias().size() > b->getDependencias().size();
+            });
+            cout << "Los 5 paquetes con más dependencias son:\n";
+            for (int i = 0; i < 5 ; i++) {
+                cout << paquetes[i]->getNombre() << " - Dependencias: " << paquetes[i]->getDependencias().size() << endl;
+            }
+        }
+
+        void getPaquetesSinDependencias() {
+            cout << "Paquetes sin dependencias:\n";
+            for (auto paquete : paquetes) {
+                if (paquete->getDependencias().empty()) {
+                    cout << paquete->getNombre() << endl;
+                }
+            }
+        }
 };
+
+class ConjuntoPaquetes {
+    private:
+        vector<Paquete*> paquetes;
+        char codigo[100];
+        char nombre[100];
+        int version;
+    public:
+        ConjuntoPaquetes(const char* codigo, const char* nombre, int version) {
+            strcpy(this->codigo, codigo);
+            strcpy(this->nombre, nombre);
+            this->version = version;
+        }
+
+        void agregarPaquete(Paquete* paquete) { paquetes.push_back(paquete); }
+
+        void instalacionRec(const Paquete* paquete, vector<Paquete*>& instalados) {
+            if (paquete->getDependencias().empty()) return;
+            for (auto dep : paquete->getDependencias()) {
+                bool encontrado = false;
+                for (auto inst : instalados) {
+                    if (strcmp(inst->getCodigo(), dep->getCodigo()) == 0) {
+                        encontrado = true;
+                        break;
+                    }
+                }
+                if (!encontrado) {
+                    instalados.push_back(dep);
+                    instalacionRec(dep, instalados);
+                }
+            }
+        }
+
+        void guardarConjuntoEnArchivo(const char* nombreArchivo) {
+            ofstream archivo(nombreArchivo);
+            if (archivo.is_open()) {
+                archivo << "Conjunto de paquetes: " << nombre << "\n";
+                for (auto paquete : paquetes) {
+                    archivo << paquete->getNombre() << " (v" << paquete->getVersion() << ")\n";
+                }
+                archivo.close();
+                cout << "Archivo '" << nombreArchivo << "' generado correctamente.\n";
+            } else {
+                cout << "No se pudo abrir el archivo.\n";
+            }
+        }
+}
+
 
 int main() {
     GestorPaquetes gestor;
