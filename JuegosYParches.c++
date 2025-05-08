@@ -32,6 +32,7 @@ public:
 
     virtual char* getDescripcion() {
         return descripcion;
+        
     }
 
     virtual float getCosto() {
