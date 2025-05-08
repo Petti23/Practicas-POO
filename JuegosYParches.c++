@@ -194,6 +194,28 @@ public:
     bool verificarInstalacion(Parche* parche, vector<Producto*>& instalados) {
         return parche->puedeInstalarse(instalados);
     }
+
+    //funcion para guardar los datos en un archivo binario con su tamaño
+    void guardarDatos() {
+        ofstream out("datos.bin", ios::binary);
+        size_t size = juegos.size();
+        out.write((char*)&size, sizeof(size_t));
+        for (auto juego : juegos) {
+            size_t nombreSize = strlen(juego->getNombre()) + 1;
+            out.write((char*)&nombreSize, sizeof(size_t));
+            out.write(juego->getNombre(), nombreSize);
+            out.write((char*)&juego->getCosto(), sizeof(float));
+        }
+        size = parches.size();
+        out.write((char*)&size, sizeof(size_t));
+        for (auto parche : parches) {
+            size_t nombreSize = strlen(parche->getNombre()) + 1;
+            out.write((char*)&nombreSize, sizeof(size_t));
+            out.write(parche->getNombre(), nombreSize);
+            out.write((char*)&parche->getCosto(), sizeof(float));
+        }
+        out.close();
+    }
 };
 
 // Función principal
