@@ -172,18 +172,31 @@ int main() {
     Paquete* p2 = new Paquete("P2", "Paquete2", 2);
     Paquete* p3 = new Paquete("P3", "Paquete3", 3);
     Paquete* p4 = new Paquete("P4", "Paquete4", 4);
+    Paquete* p5 = new Paquete("P5", "Paquete5", 5);
 
     p1->agregarDependencia(p2);
     p1->agregarDependencia(p3);
     p2->agregarDependencia(p4);
+    p3->agregarDependencia(p4); // p3 también depende de p4
+    p4->agregarDependencia(p5); // p4 depende de p5
 
     gestor.agregarPaquete(p1);
     gestor.agregarPaquete(p2);
     gestor.agregarPaquete(p3);
     gestor.agregarPaquete(p4);
+    gestor.agregarPaquete(p5);
 
     gestor.mostrarDependencias("P1");
     gestor.guardarDependenciasEnArchivo("P1");
 
+    // Crear conjunto de paquetes
+    ConjuntoPaquetes conjunto("C001", "Conjunto Principal", 1);
+    conjunto.agregarPaquete(p1);
+    conjunto.agregarPaquete(p3);  // ya está como dependencia de p1, pero lo agregamos explícitamente
+
+    // Instalar el conjunto
+    conjunto.instalar();
+
     return 0;
 }
+
